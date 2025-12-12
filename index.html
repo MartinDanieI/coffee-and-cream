@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coffee & Cream - Galería (50 Sabores)</title>
+    
+    <!-- Importamos Tailwind CSS para el diseño responsive -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <!-- Importamos Iconos (Lucide) -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+
+    <!-- Estilos -->
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Playfair Display', serif;
+            background-color: #a85f2fd1;
+        }
+        
+        .bg-coffee-latte {
+            background-color: #d4c5b5;
+        }
+
+        /* Animaciones suaves */
+        .img-container {
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        .img-container:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1);
+        }
+        
+        /* Efecto Zoom en la imagen */
+        .helado-img {
+            transition: transform 0.6s ease;
+        }
+        .img-container:hover .helado-img {
+            transform: scale(1.1);
+        }
+    </style>
+</head>
+<body class="text-stone-800 min-h-screen flex flex-col">
+
+    <!-- HEADER -->
+   <header class="py-3 text-center bg-white shadow-sm sticky top-0 z-50 border-b border-stone-200">
+        <div class="flex items-center justify-center gap-2 mb-1 px-4">
+            <!-- Icono más pequeño (w-6 h-6) -->
+            <i data-lucide="coffee" class="text-amber-800 w-10 h-10"></i>
+            <!-- Texto más pequeño (text-xl md:text-2xl) -->
+            <h1 class="text-xl md:text-2xl font-black tracking-widest text-amber-950 uppercase truncate">
+                Coffee <span class="text-amber-600">&</span> Cream
+            </h1>
+        </div>
+        
+    </header>
+
+    <!-- GALERÍA -->
+    <main class="flex-grow w-full max-w-7xl mx-auto px-4 sm:px-6 py-8 pb-12">
+        <!-- 
+            CAMBIO EN EL GRID PARA HACERLOS MÁS GRANDES:
+            - Quitamos 'lg:grid-cols-5' y lo dejamos en máximo 4 columnas (lg:grid-cols-4).
+            - Quitamos 'sm:grid-cols-3' para que en tablets se mantengan 2 grandes o pasen a 3 solo en pantallas medianas.
+            - Resultado: Menos columnas = Cuadros más grandes.
+        -->
+        <div id="galeria-helados" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
+            <!-- Las imágenes se insertan aquí con JavaScript -->
+        </div>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="py-6 bg-coffee-latte border-t border-stone-300 mt-auto">
+        <div class="container mx-auto px-4 text-center">
+            <p class="text-stone-900 text-sm md:text-base font-bold tracking-wide">
+                2025 - Martin Daniel Betancourt Plazas
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        lucide.createIcons();
+
+        // --- ZONA DE CONFIGURACIÓN ---
+        
+        // 1. Nombre de la carpeta (déjalo vacío "" si están junto al html)
+        const carpeta = "imagenes"; 
+        
+        // 2. Extensión principal (NO CAMBIAR)
+        // El código intentará cargar .jpg primero, y si falla, cambiará solo a .png
+        const extension = ".jpg"; 
+
+        // 3. Cantidad total de helados
+        const totalHelados = 50;
+
+        // --- FUNCIÓN INTELIGENTE PARA JPG Y PNG ---
+        // Esta función se activa si una imagen no carga (error 404)
+        function manejarErrorImagen(img) {
+            // Verificamos si la imagen que falló era .jpg
+            if (img.src.includes('.jpg')) {
+                // Si era jpg, intentamos cargar la misma pero en .png
+                // console.log("Reintentando con PNG:", img.src);
+                img.src = img.src.replace('.jpg', '.png');
+            } 
+            // Si ya era .png y falló también, mostramos el mensaje de error
+            else {
+                img.onerror = null; // Detenemos para evitar bucles
+                img.parentElement.innerHTML = '<div class="flex flex-col items-center justify-center h-full text-stone-400 p-2"><i data-lucide="image-off" class="w-8 h-8 mb-2 opacity-50"></i><span class="text-xs text-center">Sin imagen</span></div>';
+                lucide.createIcons(); // Recargar icono de error
+            }
+        }
+
+        // Generamos la lista de rutas
+        const listaImagenes = [];
+        for (let i = 1; i <= totalHelados; i++) {
+            const ruta = `${carpeta}/helado${i}${extension}`;
+            listaImagenes.push(ruta);
+        }
+
+        // Lógica para pintar la galería
+        const galeria = document.getElementById('galeria-helados');
+        
+        listaImagenes.forEach((url, index) => {
+            // CAMBIO: Volvemos a 'aspect-square' para que sea cuadrado perfecto
+            const cardHTML = `
+                <div class="aspect-square bg-white rounded-3xl p-2 sm:p-3 shadow-sm img-container cursor-pointer overflow-hidden group">
+                    <div class="w-full h-full rounded-2xl overflow-hidden relative bg-stone-100 flex items-center justify-center">
+                        <img 
+                            src="${url}" 
+                            alt="Helado ${index + 1}" 
+                            class="w-full h-full object-cover helado-img"
+                            onerror="manejarErrorImagen(this)"
+                        >
+                        <!-- Capa de brillo sutil oscura al pasar el mouse -->
+                        <div class="absolute inset-0 bg-amber-900/0 group-hover:bg-amber-900/10 transition-colors duration-300 pointer-events-none"></div>
+                    </div>
+                </div>
+            `;
+            galeria.innerHTML += cardHTML;
+        });
+    </script>
+</body>
+</html>
