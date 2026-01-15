@@ -8,6 +8,7 @@
     <script src="https://unpkg.com/lucide@latest"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap');
+        /* TU FONDO AMARILLO */
         body { font-family: 'Lato', sans-serif; background-color: #ecb341; color: #44403c; }
         h1 { font-family: 'Playfair Display', serif; }
         .fade-in { animation: fadeIn 0.5s ease-out; }
@@ -92,7 +93,7 @@
             <i data-lucide="clock" class="w-16 h-16 text-amber-800"></i>
         </div>
         <h2 class="text-3xl font-black text-amber-950 mb-4 font-serif">¡Gracias por tu visita!</h2>
-        <p class="text-stone-600 mb-8 max-w-md">Tu sesión ha finalizado por inactividad.</p>
+        <p class="text-stone-600 mb-8 max-w-md">Tu sesión ha finalizado.</p>
         <p class="text-xs font-bold text-stone-400 uppercase tracking-widest">Escanea el código QR nuevamente para ver el menú</p>
     </div>
 
@@ -101,7 +102,6 @@
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // TUS DATOS DE FIREBASE
         const firebaseConfig = {
             apiKey: "AIzaSyAgnADVZq8tuREP88whtb8Gqq-4QgNMxMs",
             authDomain: "coffe-and-cream.firebaseapp.com",
@@ -119,29 +119,17 @@
         const getCollection = () => collection(db, 'artifacts', appId, 'public', 'data', 'helados');
         let isAdmin = false;
 
-        // --- LÓGICA DE TEMPORIZADOR (5 MINUTOS) ---
-        let inactivityTimer;
-        const TIMEOUT_DURATION = 5 * 60 * 1000; // 5 minutos en milisegundos
+        // --- TEMPORIZADOR ESTRICTO (3 MINUTOS) ---
+        // ¡OJO! Esto bloquea la pantalla pase lo que pase a los 3 minutos
+        const TIMEOUT_DURATION = 3 * 60 * 1000; // 3 minutos
 
-        function resetTimer() {
-            // Si ya está bloqueado, no reiniciamos nada
-            if (!document.getElementById('timeout-screen').classList.contains('hidden')) return;
-            
-            clearTimeout(inactivityTimer);
-            inactivityTimer = setTimeout(() => {
-                // Acción al acabarse el tiempo:
-                document.getElementById('timeout-screen').classList.remove('hidden');
-                lucide.createIcons();
-            }, TIMEOUT_DURATION);
-        }
+        // Iniciamos el conteo apenas carga la página
+        setTimeout(() => {
+            document.getElementById('timeout-screen').classList.remove('hidden');
+            lucide.createIcons();
+        }, TIMEOUT_DURATION);
 
-        // Detectar cualquier movimiento del usuario para reiniciar el reloj
-        window.onload = resetTimer;
-        document.onmousemove = resetTimer;
-        document.onkeypress = resetTimer;
-        document.ontouchstart = resetTimer; // Para celulares
-        document.onclick = resetTimer;
-        document.onscroll = resetTimer;
+        // Sin detectores de movimiento.
         // ---------------------------------------------
 
         signInAnonymously(auth).catch(e => console.error("Error Auth:", e));
