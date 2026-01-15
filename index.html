@@ -4,35 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Coffee & Cream - Menú</title>
-    <!-- Tailwind CSS (Estilos) -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Iconos -->
     <script src="https://unpkg.com/lucide@latest"></script>
-    <!-- Google Fonts -->
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=Lato:wght@400;700&display=swap');
-        body { font-family: 'Lato', sans-serif; background-color: #ecb341; color: #44403c; }
+        body { font-family: 'Lato', sans-serif; background-color: #fdfbf7; color: #44403c; }
         h1 { font-family: 'Playfair Display', serif; }
-        
-        /* Animaciones simples */
         .fade-in { animation: fadeIn 0.5s ease-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        
         .loader {
-            width: 18px; height: 18px;
-            border: 2px solid #FFF;
-            border-bottom-color: transparent;
-            border-radius: 50%;
-            display: inline-block;
-            box-sizing: border-box;
-            animation: rotation 1s linear infinite;
+            width: 18px; height: 18px; border: 2px solid #FFF; border-bottom-color: transparent;
+            border-radius: 50%; display: inline-block; animation: rotation 1s linear infinite;
         }
         @keyframes rotation { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="flex flex-col min-h-screen">
 
-    <!-- HEADER -->
     <header class="bg-white shadow-sm sticky top-0 z-50 border-b border-stone-200">
         <div class="max-w-4xl mx-auto px-4 py-3 flex justify-between items-center">
             <div class="flex items-center gap-2">
@@ -42,61 +30,44 @@
                 </h1>
             </div>
             <div class="flex items-center gap-2">
-                 <div id="connection-status" class="w-2 h-2 rounded-full bg-red-500 animate-pulse" title="Desconectado"></div>
-                 <div id="admin-indicator" class="hidden text-[10px] bg-green-100 text-green-800 px-2 py-1 rounded-full font-bold border border-green-200 uppercase tracking-wider">
-                    Admin
-                </div>
+                 <div id="connection-status" class="w-2 h-2 rounded-full bg-red-500 animate-pulse"></div>
+                 <div id="admin-indicator" class="hidden text-[10px] bg-green-100 text-green-800 px-2 py-1 rounded-full font-bold border border-green-200 uppercase tracking-wider">Admin</div>
             </div>
         </div>
     </header>
 
-    <!-- MAIN CONTENT -->
     <main class="flex-grow max-w-4xl mx-auto w-full px-4 py-6">
-        
-        <!-- BARRA DE ACCIÓN ADMIN (Oculta por defecto) -->
         <div id="admin-toolbar" class="hidden bg-white p-4 rounded-xl shadow-md border border-stone-100 mb-6 flex flex-col sm:flex-row gap-4 items-center justify-between fade-in">
-            <div class="text-sm text-stone-600">
-                <span class="font-bold text-amber-800">Panel de Control:</span> Sube fotos nuevas
-            </div>
+            <div class="text-sm text-stone-600"><span class="font-bold text-amber-800">Panel:</span> Sube fotos nuevas</div>
             <div class="flex gap-2 w-full sm:w-auto">
                 <input type="file" id="file-input" accept="image/*" class="hidden">
                 <button id="btn-upload" class="flex-1 sm:flex-none bg-amber-700 hover:bg-amber-800 text-white px-4 py-2 rounded-lg text-sm font-bold flex items-center justify-center gap-2 transition-all">
-                    <i data-lucide="image-plus" class="w-4 h-4"></i>
-                    <span id="btn-text">Subir Foto</span>
+                    <i data-lucide="image-plus" class="w-4 h-4"></i><span id="btn-text">Subir Foto</span>
                 </button>
-                <button id="btn-logout" class="bg-stone-200 hover:bg-stone-300 text-stone-600 px-3 py-2 rounded-lg transition-all" title="Salir">
-                    <i data-lucide="log-out" class="w-4 h-4"></i>
-                </button>
+                <button id="btn-logout" class="bg-stone-200 hover:bg-stone-300 text-stone-600 px-3 py-2 rounded-lg transition-all"><i data-lucide="log-out" class="w-4 h-4"></i></button>
             </div>
         </div>
 
-        <!-- LISTA DE PRODUCTOS (GRID) -->
         <div id="products-grid" class="grid grid-cols-2 md:grid-cols-3 gap-4 pb-20">
-            <!-- AQUÍ SE INYECTA EL HTML DESDE JS -->
             <div class="col-span-full text-center py-10 text-stone-400">
                 <div class="loader border-stone-400 border-b-transparent mb-2"></div>
-                <p class="text-sm">Conectando con Firebase...</p>
+                <p class="text-sm">Conectando...</p>
             </div>
         </div>
 
-        <!-- MENSAJE VACÍO -->
         <div id="empty-state" class="hidden text-center py-20 opacity-50">
             <i data-lucide="ice-cream-2" class="w-16 h-16 mx-auto mb-4 text-stone-300"></i>
             <p class="text-lg font-serif italic">El menú está vacío por ahora.</p>
         </div>
     </main>
 
-    <!-- FOOTER & LOGIN -->
     <footer class="bg-[#e7e0d8] border-t border-[#d6cec5] py-6 text-center">
-        <p class="text-stone-600 text-xs font-bold tracking-widest mb-2">
-            © 2025 COFFEE & CREAM
-        </p>
+        <p class="text-stone-600 text-xs font-bold tracking-widest mb-2">© 2025 COFFEE & CREAM</p>
         <button id="login-trigger" class="text-[10px] text-stone-400 hover:text-stone-600 uppercase tracking-widest font-bold flex items-center justify-center gap-1 mx-auto transition-colors">
             <i data-lucide="lock" class="w-3 h-3"></i> Acceso Staff
         </button>
     </footer>
 
-    <!-- MODAL DE LOGIN -->
     <div id="login-modal" class="hidden fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4 fade-in">
         <div class="bg-white p-6 rounded-2xl shadow-2xl w-full max-w-xs">
             <div class="flex justify-between items-center mb-4">
@@ -110,153 +81,124 @@
         </div>
     </div>
 
-    <!-- LIGHTBOX (VISOR DE FOTOS) -->
     <div id="lightbox" class="hidden fixed inset-0 bg-black/95 z-[60] flex items-center justify-center p-2 backdrop-blur-md fade-in" onclick="this.classList.add('hidden')">
         <button class="absolute top-4 right-4 text-white/50 hover:text-white p-2"><i data-lucide="x" class="w-8 h-8"></i></button>
         <img id="lightbox-img" src="" class="max-w-full max-h-[85vh] object-contain rounded-md shadow-2xl" onclick="event.stopPropagation()">
     </div>
 
-    <!-- SCRIPTS (LÓGICA) -->
+    <!-- PANTALLA DE BLOQUEO (TIMEOUT) -->
+    <div id="timeout-screen" class="hidden fixed inset-0 bg-[#fdfbf7] z-[100] flex flex-col items-center justify-center p-8 text-center">
+        <div class="bg-white p-8 rounded-full shadow-lg mb-6">
+            <i data-lucide="clock" class="w-16 h-16 text-amber-800"></i>
+        </div>
+        <h2 class="text-3xl font-black text-amber-950 mb-4 font-serif">¡Gracias por tu visita!</h2>
+        <p class="text-stone-600 mb-8 max-w-md">Tu sesión ha finalizado por inactividad.</p>
+        <p class="text-xs font-bold text-stone-400 uppercase tracking-widest">Escanea el código QR nuevamente para ver el menú</p>
+    </div>
+
     <script type="module">
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
         import { getFirestore, collection, addDoc, deleteDoc, doc, onSnapshot, query, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-        // ==========================================
-        // ⚠️ CONFIGURACIÓN FIREBASE ⚠️
-        // ==========================================
-        let firebaseConfig;
-        let appId;
+        // TUS DATOS DE FIREBASE
+        const firebaseConfig = {
+            apiKey: "AIzaSyAgnADVZq8tuREP88whtb8Gqq-4QgNMxMs",
+            authDomain: "coffe-and-cream.firebaseapp.com",
+            projectId: "coffe-and-cream",
+            storageBucket: "coffe-and-cream.firebasestorage.app",
+            messagingSenderId: "469485001184",
+            appId: "1:469485001184:web:833c5086c49f1507a8b385",
+            measurementId: "G-9HHCV3YE8P"
+        };
+        const appId = "coffe-and-cream";
 
-        // ESTE BLOQUE ES PARA QUE FUNCIONE EN EL CHAT DE PRUEBA
-        if (typeof __firebase_config !== 'undefined') {
-            firebaseConfig = JSON.parse(__firebase_config);
-            appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
-        } else {
-            // =================================================================
-            // CONFIGURACIÓN REAL INTEGRADA (NETLIFY)
-            // =================================================================
-            firebaseConfig = {
-                apiKey: "AIzaSyAgnADVZq8tuREP88whtb8Gqq-4QgNMxMs",
-                authDomain: "coffe-and-cream.firebaseapp.com",
-                projectId: "coffe-and-cream",
-                storageBucket: "coffe-and-cream.firebasestorage.app",
-                messagingSenderId: "469485001184",
-                appId: "1:469485001184:web:833c5086c49f1507a8b385",
-                measurementId: "G-9HHCV3YE8P"
-            };
-            // Usamos el ID del proyecto como identificador para la carpeta de datos
-            appId = "coffe-and-cream"; 
-        }
-
-        // INICIALIZAR APP
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
-        
-        // RUTA DE DATOS (PÚBLICA)
         const getCollection = () => collection(db, 'artifacts', appId, 'public', 'data', 'helados');
-
-        // ESTADO
         let isAdmin = false;
 
-        // 1. AUTENTICACIÓN ANÓNIMA (Para que todos puedan ver)
+        // --- LÓGICA DE TEMPORIZADOR (5 MINUTOS) ---
+        let inactivityTimer;
+        const TIMEOUT_DURATION = 5 * 60 * 1000; // 5 minutos en milisegundos
+
+        function resetTimer() {
+            // Si ya está bloqueado, no reiniciamos nada
+            if (!document.getElementById('timeout-screen').classList.contains('hidden')) return;
+            
+            clearTimeout(inactivityTimer);
+            inactivityTimer = setTimeout(() => {
+                // Acción al acabarse el tiempo:
+                document.getElementById('timeout-screen').classList.remove('hidden');
+                lucide.createIcons();
+            }, TIMEOUT_DURATION);
+        }
+
+        // Detectar cualquier movimiento del usuario para reiniciar el reloj
+        window.onload = resetTimer;
+        document.onmousemove = resetTimer;
+        document.onkeypress = resetTimer;
+        document.ontouchstart = resetTimer; // Para celulares
+        document.onclick = resetTimer;
+        document.onscroll = resetTimer;
+        // ---------------------------------------------
+
         signInAnonymously(auth).catch(e => console.error("Error Auth:", e));
 
-        // 2. ESCUCHAR CAMBIOS EN LA BASE DE DATOS
         onAuthStateChanged(auth, (user) => {
             const statusDot = document.getElementById('connection-status');
-            
             if (user) {
-                statusDot.classList.remove('bg-red-500');
-                statusDot.classList.add('bg-green-500'); // Conectado
-                
-                // Escuchar colección en tiempo real
+                statusDot.classList.remove('bg-red-500'); statusDot.classList.add('bg-green-500');
                 onSnapshot(query(getCollection()), (snapshot) => {
                     const items = [];
                     snapshot.forEach(doc => items.push({ id: doc.id, ...doc.data() }));
-                    
-                    // Ordenar por fecha (más nuevo primero)
                     items.sort((a, b) => (b.createdAt?.seconds || 0) - (a.createdAt?.seconds || 0));
-                    
                     renderGrid(items);
                 }, (error) => {
-                    console.error("Error de lectura:", error);
-                    // Si falla la lectura, probablemente es por reglas o DB inexistente
-                    const grid = document.getElementById('products-grid');
-                    grid.innerHTML = `<div class="col-span-full text-center text-red-500 p-4 bg-red-50 rounded-lg text-sm">
-                        <p class="font-bold">⚠️ Error de Base de Datos</p>
-                        <p>No se pudo conectar a Firestore. ¿Creaste la base de datos en modo prueba?</p>
-                    </div>`;
+                    console.error("Error lectura:", error);
+                    document.getElementById('products-grid').innerHTML = `<div class="col-span-full text-center text-red-500 p-4 bg-red-50 rounded-lg text-sm"><p class="font-bold">⚠️ Error de Lectura</p><p>Verifica que la base de datos esté en 'Modo Prueba' en la consola de Firebase.</p></div>`;
                 });
             } else {
-                statusDot.classList.add('bg-red-500');
-                statusDot.classList.remove('bg-green-500');
+                statusDot.classList.add('bg-red-500'); statusDot.classList.remove('bg-green-500');
             }
         });
 
-        // 3. RENDERIZAR LA CUADRÍCULA
         function renderGrid(items) {
             const grid = document.getElementById('products-grid');
-            grid.innerHTML = ''; // Limpiar
-
+            grid.innerHTML = '';
             if (items.length === 0) {
                 document.getElementById('empty-state').classList.remove('hidden');
             } else {
                 document.getElementById('empty-state').classList.add('hidden');
-                
                 items.forEach(item => {
                     const div = document.createElement('div');
                     div.className = "aspect-square relative group overflow-hidden rounded-xl bg-stone-100 shadow-sm cursor-pointer hover:shadow-lg transition-all";
-                    div.onclick = () => {
-                        const lb = document.getElementById('lightbox');
-                        document.getElementById('lightbox-img').src = item.imagen;
-                        lb.classList.remove('hidden');
-                    };
-
-                    const deleteBtn = isAdmin ? `
-                        <button onclick="event.stopPropagation(); window.deleteItem('${item.id}')" 
-                                class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-md hover:bg-red-600 transition-colors z-10">
-                            <i data-lucide="trash-2" class="w-4 h-4"></i>
-                        </button>
-                    ` : '';
-
-                    div.innerHTML = `
-                        <img src="${item.imagen}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy">
-                        <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>
-                        ${deleteBtn}
-                    `;
+                    div.onclick = () => { document.getElementById('lightbox-img').src = item.imagen; document.getElementById('lightbox').classList.remove('hidden'); };
+                    const deleteBtn = isAdmin ? `<button onclick="event.stopPropagation(); window.deleteItem('${item.id}')" class="absolute top-2 right-2 bg-red-500 text-white p-2 rounded-full shadow-md hover:bg-red-600 transition-colors z-10"><i data-lucide="trash-2" class="w-4 h-4"></i></button>` : '';
+                    div.innerHTML = `<img src="${item.imagen}" class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" loading="lazy"><div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition-colors"></div>${deleteBtn}`;
                     grid.appendChild(div);
                 });
-                lucide.createIcons(); // Refrescar iconos
+                lucide.createIcons();
             }
         }
 
-        // 4. SUBIR IMAGEN (CON TIMEOUT DE SEGURIDAD 3 MINUTOS)
         const fileInput = document.getElementById('file-input');
         const uploadBtn = document.getElementById('btn-upload');
-        
         uploadBtn.onclick = () => fileInput.click();
 
         fileInput.onchange = async (e) => {
             if (!e.target.files[0]) return;
             const file = e.target.files[0];
-
-            // Validar que tenemos conexión antes de empezar
-            if (!auth.currentUser) {
-                alert("Error de conexión: No estás conectado a Firebase. Refresca la página.");
-                return;
-            }
+            if (!auth.currentUser) { alert("Sin conexión. Refresca la página."); return; }
             
-            // UI Loading
             const btnText = document.getElementById('btn-text');
             const originalText = "Subir Foto";
             btnText.innerText = "Subiendo...";
             uploadBtn.disabled = true;
 
             try {
-                // Comprimir y Convertir a Base64
-                const compressPromise = new Promise((resolve, reject) => {
+                const base64 = await new Promise((resolve, reject) => {
                     const reader = new FileReader();
                     reader.readAsDataURL(file);
                     reader.onload = (ev) => {
@@ -264,102 +206,57 @@
                         img.src = ev.target.result;
                         img.onload = () => {
                             const canvas = document.createElement('canvas');
-                            const MAX = 800; 
+                            const MAX = 500; 
                             const scale = MAX / img.width;
                             canvas.width = MAX;
                             canvas.height = img.height * scale;
                             const ctx = canvas.getContext('2d');
                             ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-                            resolve(canvas.toDataURL('image/jpeg', 0.8));
+                            resolve(canvas.toDataURL('image/jpeg', 0.5));
                         };
-                        img.onerror = () => reject(new Error("IMAGE_ERROR"));
+                        img.onerror = () => reject("Error imagen");
                     };
-                    reader.onerror = () => reject(new Error("FILE_READ_ERROR"));
+                    reader.onerror = () => reject("Error archivo");
                 });
 
-                const base64 = await compressPromise;
-
-                // Promesa de Timeout (3 minutos / 180,000 ms)
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error("TIMEOUT")), 180000)
-                );
-
-                // Carrera entre subir y el timeout
+                const timeoutPromise = new Promise((_, reject) => setTimeout(() => reject(new Error("TIMEOUT")), 180000));
+                
                 await Promise.race([
-                    addDoc(getCollection(), {
-                        imagen: base64,
-                        createdAt: serverTimestamp()
-                    }),
+                    addDoc(getCollection(), { imagen: base64, createdAt: serverTimestamp() }),
                     timeoutPromise
                 ]);
-                
-                alert("¡Imagen subida con éxito!");
-
+                alert("¡Listo! Foto subida.");
             } catch (err) {
-                console.error("Error detallado:", err);
-                
-                if (err.message === "TIMEOUT") {
-                    alert("⏳ TIEMPO AGOTADO (3 min).\n\nLa subida tardó demasiado. Verifica tu conexión o intenta con una imagen más pequeña.");
-                } else if (err.code === 'permission-denied') {
-                    alert("⛔ PERMISO DENEGADO.\n\nVe a Firebase -> Firestore Database -> Reglas y ponlas en modo público para probar.");
-                } else {
-                    alert("Error: " + (err.message || "Desconocido"));
-                }
+                console.error("Error:", err);
+                if (err.message === "TIMEOUT") alert("⏳ Se agotó el tiempo.");
+                else if (err.code === 'resource-exhausted') alert("⚠️ Foto muy pesada.");
+                else if (err.code === 'permission-denied') alert("⛔ Permiso denegado.");
+                else alert("Error: " + err.message);
             } finally {
-                btnText.innerText = originalText;
-                uploadBtn.disabled = false;
-                fileInput.value = '';
+                btnText.innerText = originalText; uploadBtn.disabled = false; fileInput.value = '';
             }
         };
 
-        // 5. BORRAR ITEM (Expuesto a window para usar en HTML string)
-        window.deleteItem = async (id) => {
-            if (confirm("¿Eliminar este helado del catálogo?")) {
-                await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'helados', id));
-            }
-        };
-
-        // 6. LOGICA DE SESIÓN (Login simple)
-        const loginModal = document.getElementById('login-modal');
+        window.deleteItem = async (id) => { if (confirm("¿Borrar?")) await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'helados', id)); };
         
+        const loginModal = document.getElementById('login-modal');
         document.getElementById('login-trigger').onclick = () => loginModal.classList.remove('hidden');
         document.getElementById('close-login').onclick = () => loginModal.classList.add('hidden');
-        
         document.getElementById('login-form').onsubmit = (e) => {
             e.preventDefault();
-            const pass = document.getElementById('password').value;
-            
-            if (pass === "coffee2025") { // CONTRASEÑA
-                isAdmin = true;
-                document.getElementById('admin-toolbar').classList.remove('hidden');
-                document.getElementById('admin-indicator').classList.remove('hidden');
-                document.getElementById('login-trigger').classList.add('hidden');
-                loginModal.classList.add('hidden');
-                alert("Modo Admin Activado");
-                // Forzar recarga visual
-                location.reload(); 
-                localStorage.setItem('isAdmin', 'true');
-            } else {
-                alert("Contraseña incorrecta");
-            }
+            if (document.getElementById('password').value === "coffee2025") {
+                localStorage.setItem('isAdmin', 'true'); location.reload();
+            } else alert("Error");
         };
         
-        // Chequear persistencia simple al cargar
         if (localStorage.getItem('isAdmin') === 'true') {
              isAdmin = true;
              document.getElementById('admin-toolbar').classList.remove('hidden');
              document.getElementById('admin-indicator').classList.remove('hidden');
              document.getElementById('login-trigger').classList.add('hidden');
         }
-
-        document.getElementById('btn-logout').onclick = () => {
-            localStorage.removeItem('isAdmin');
-            location.reload();
-        };
-
-        // Iniciar iconos
+        document.getElementById('btn-logout').onclick = () => { localStorage.removeItem('isAdmin'); location.reload(); };
         lucide.createIcons();
-
     </script>
 </body>
 </html>
